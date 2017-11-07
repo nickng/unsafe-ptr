@@ -32,19 +32,56 @@ func (b *Buffer) Send(val interface{}) {
 func (b *Buffer) Recv(ptr interface{}) error {
 	var word uint
 
-	// ptrConcrete points to the concrete value of the ptr interface at runtime.
-	// interface{} is stored as 2 words, and we only look at the 2nd word.
-	ptrConcrete := unsafe.Pointer(uintptr(unsafe.Pointer(&ptr)) + unsafe.Sizeof(word))
-
-	// bPtrConcrete points to the real value of the ptr field of the buffer.
-	// interface{} is stored as 2 words, and we only look at the 2nd word.
-	bPtrConcrete := unsafe.Pointer(uintptr(b.ptr) + unsafe.Sizeof(word))
-
-	// ptrAddr is the memory location storing *ptr.
-	// This is the memory location to write into.
-	ptrAddr := *(**unsafe.Pointer)(ptrConcrete)
-
-	*ptrAddr = **(**unsafe.Pointer)(bPtrConcrete)
+	switch ptr.(type) {
+	case *bool:
+		**(**bool)(unsafe.Pointer(uintptr(unsafe.Pointer(&ptr)) + unsafe.Sizeof(word))) =
+			**(**bool)(unsafe.Pointer(uintptr(b.ptr) + unsafe.Sizeof(word)))
+	case *float32:
+		**(**float32)(unsafe.Pointer(uintptr(unsafe.Pointer(&ptr)) + unsafe.Sizeof(word))) =
+			**(**float32)(unsafe.Pointer(uintptr(b.ptr) + unsafe.Sizeof(word)))
+	case *float64:
+		**(**float64)(unsafe.Pointer(uintptr(unsafe.Pointer(&ptr)) + unsafe.Sizeof(word))) =
+			**(**float64)(unsafe.Pointer(uintptr(b.ptr) + unsafe.Sizeof(word)))
+	case *int:
+		**(**int)(unsafe.Pointer(uintptr(unsafe.Pointer(&ptr)) + unsafe.Sizeof(word))) =
+			**(**int)(unsafe.Pointer(uintptr(b.ptr) + unsafe.Sizeof(word)))
+	case *int8:
+		**(**int8)(unsafe.Pointer(uintptr(unsafe.Pointer(&ptr)) + unsafe.Sizeof(word))) =
+			**(**int8)(unsafe.Pointer(uintptr(b.ptr) + unsafe.Sizeof(word)))
+	case *int16:
+		**(**int16)(unsafe.Pointer(uintptr(unsafe.Pointer(&ptr)) + unsafe.Sizeof(word))) =
+			**(**int16)(unsafe.Pointer(uintptr(b.ptr) + unsafe.Sizeof(word)))
+	case *int32:
+		**(**int32)(unsafe.Pointer(uintptr(unsafe.Pointer(&ptr)) + unsafe.Sizeof(word))) =
+			**(**int32)(unsafe.Pointer(uintptr(b.ptr) + unsafe.Sizeof(word)))
+	case *int64:
+		**(**int64)(unsafe.Pointer(uintptr(unsafe.Pointer(&ptr)) + unsafe.Sizeof(word))) =
+			**(**int64)(unsafe.Pointer(uintptr(b.ptr) + unsafe.Sizeof(word)))
+	case *uint:
+		**(**uint)(unsafe.Pointer(uintptr(unsafe.Pointer(&ptr)) + unsafe.Sizeof(word))) =
+			**(**uint)(unsafe.Pointer(uintptr(b.ptr) + unsafe.Sizeof(word)))
+	case *uint8:
+		**(**uint8)(unsafe.Pointer(uintptr(unsafe.Pointer(&ptr)) + unsafe.Sizeof(word))) =
+			**(**uint8)(unsafe.Pointer(uintptr(b.ptr) + unsafe.Sizeof(word)))
+	case *uint16:
+		**(**uint16)(unsafe.Pointer(uintptr(unsafe.Pointer(&ptr)) + unsafe.Sizeof(word))) =
+			**(**uint16)(unsafe.Pointer(uintptr(b.ptr) + unsafe.Sizeof(word)))
+	case *uint32:
+		**(**uint32)(unsafe.Pointer(uintptr(unsafe.Pointer(&ptr)) + unsafe.Sizeof(word))) =
+			**(**uint32)(unsafe.Pointer(uintptr(b.ptr) + unsafe.Sizeof(word)))
+	case *uint64:
+		**(**uint64)(unsafe.Pointer(uintptr(unsafe.Pointer(&ptr)) + unsafe.Sizeof(word))) =
+			**(**uint64)(unsafe.Pointer(uintptr(b.ptr) + unsafe.Sizeof(word)))
+	case *uintptr:
+		**(**uintptr)(unsafe.Pointer(uintptr(unsafe.Pointer(&ptr)) + unsafe.Sizeof(word))) =
+			**(**uintptr)(unsafe.Pointer(uintptr(b.ptr) + unsafe.Sizeof(word)))
+	case *string:
+		**(**string)(unsafe.Pointer(uintptr(unsafe.Pointer(&ptr)) + unsafe.Sizeof(word))) =
+			**(**string)(unsafe.Pointer(uintptr(b.ptr) + unsafe.Sizeof(word)))
+	default:
+		**(**unsafe.Pointer)(unsafe.Pointer(uintptr(unsafe.Pointer(&ptr)) + unsafe.Sizeof(word))) =
+			**(**unsafe.Pointer)(unsafe.Pointer(uintptr(b.ptr) + unsafe.Sizeof(word)))
+	}
 	return nil
 }
 
