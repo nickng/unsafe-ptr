@@ -28,8 +28,7 @@ func (b *Buffer) Send(val interface{}) {
 }
 
 // Recv is a generic receiving function that receives from Buffer b and writes
-// to the memory location pointed to by ptr. Note that ptr is a pointer to an
-// internal location and is volatile.
+// to the memory location pointed to by ptr.
 func (b *Buffer) Recv(ptr interface{}) error {
 	var word uint
 
